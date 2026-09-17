@@ -4,9 +4,9 @@ public abstract class Parcel {
     private String description;
     private int weight;
     private String deliveryAddress;
-    private byte sendDay;
+    private int sendDay;
 
-    public Parcel(String description, int weight, String deliveryAddress, byte sendDay) {
+    public Parcel(String description, int weight, String deliveryAddress, int sendDay) {
         this.description = description;
         this.weight = weight;
         this.deliveryAddress = deliveryAddress;
@@ -39,7 +39,7 @@ public abstract class Parcel {
         return deliveryAddress;
     }
 
-    public byte getSendDay() {
+    public int getSendDay() {
         return sendDay;
     }
 }

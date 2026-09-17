@@ -18,7 +18,17 @@ public class DeliveryApp {
         boolean running = true;
         while (running) {
             showMenu();
-            int choice = Integer.parseInt(scanner.nextLine());
+
+            String input = scanner.nextLine();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка: нужно ввести число от 0 до 5!");
+                System.out.println("Попробуйте снова.\n");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -40,7 +50,7 @@ public class DeliveryApp {
                     running = false;
                     break;
                 default:
-                    System.out.println("Неверный выбор.");
+                    System.out.println("Неверный выбор. Введите число от 0 до 5.\n");
             }
         }
     }
@@ -84,21 +94,22 @@ public class DeliveryApp {
 
         System.out.println("Введите день отправки (число):");
         String sendDayInput = scanner.nextLine();
-        byte sendDay;
+        int sendDay;
         try {
-            sendDay = Byte.parseByte(sendDayInput);
+            sendDay = Integer.parseInt(sendDayInput);
         } catch (NumberFormatException e) {
             System.out.println("Ошибка: день должен быть числом!");
             return;
         }
 
         Parcel newParcel = null;
+        boolean isAddedToBox = false;
 
         if (type == 1) {
             StandardParcel parcel = new StandardParcel(description, weight, address, sendDay);
             newParcel = parcel;
 
-            standardBox.addParcel(parcel);
+            isAddedToBox = standardBox.addParcel(parcel);
 
         } else if (type == 2) {
             FragileParcel parcel = new FragileParcel(description, weight, address, sendDay);
@@ -106,7 +117,7 @@ public class DeliveryApp {
 
             trackedParcels.add(parcel);
 
-            fragileBox.addParcel(parcel);
+            isAddedToBox = fragileBox.addParcel(parcel);
 
         } else if (type == 3) {
             System.out.println("Введите срок годности (дни):");
@@ -122,16 +133,18 @@ public class DeliveryApp {
             PerishableParcel parcel = new PerishableParcel(description, weight, address, sendDay, timeToLive);
             newParcel = parcel;
 
-            perishableBox.addParcel(parcel);
+            isAddedToBox = perishableBox.addParcel(parcel);
 
         } else {
             System.out.println("Неверный тип посылки!");
             return;
         }
 
-        if (newParcel != null) {
+        if (newParcel != null && isAddedToBox) {
             allParcels.add(newParcel);
             System.out.println("Посылка успешно создана и обработана!");
+        } else if (newParcel != null) {
+            System.out.println("Посылка создана, но не добавлена в коробку из-за превышения веса!");
         }
     }
 
